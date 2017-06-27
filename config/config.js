@@ -28,7 +28,7 @@ var config = {
       name: 'todo-app-node'
     },
     port: process.env.PORT || 3000,
-    db: 'mysql://root@localhost/'+db_name+'-production'
+    db: process.env.CLEARDB_DATABASE_URL
   }
 };
 
