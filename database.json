@@ -1,0 +1,6 @@
+{"dev": {
+    "driver": "mysql",
+    "database": "todo_app_node_development",
+    "user": "root",
+    "password": ""
+  }}
