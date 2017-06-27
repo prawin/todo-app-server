@@ -7,7 +7,18 @@ module.exports = function (app) {
 };
 
 router.get('/api/todos', function (req, res, next) {
-  db.Todo.findAll({order: [['created_at', 'DESC']]}).then(function (todos) {
+  var query_options = {order: [['created_at', 'DESC']]}
+  var filter_options = {}
+  var from_due_date = req.body.from_due_date || req.query.from_due_date
+  var to_due_date = req.body.to_due_date || req.query.to_due_date
+  if(from_due_date)
+    filter_options = Object.assign(filter_options, {$gte: from_due_date})
+  if(to_due_date)
+    filter_options = Object.assign(filter_options, {$lte: to_due_date})
+  if(Object.keys(filter_options).length > 0)
+    query_options = Object.assign(query_options, {where: {due_date: filter_options}})
+
+  db.Todo.findAll(query_options).then(function (todos) {
     res.json('200', {
       timestamp: new Date(),
       todos: todos
@@ -22,7 +33,6 @@ router.post('/api/todos', function (req, res, next) {
       todos: todo
     });
   }).catch(function(err) {
-    console.log(err)
     res.status(422).json({
       timestamp: new Date(),
       error: "All fields are required."
